@@ -1,5 +1,3 @@
 class NewsControllers {
-    index() {
-        
-    }
+    index() {}
 }
