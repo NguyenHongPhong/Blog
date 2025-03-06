@@ -39,9 +39,38 @@ class CourseController {
             const newCourse = new Course({ ...formData });
             await Course.create(formData)
                 .then(() => {
-                    res.redirect('/courses/');
+                    res.redirect('/courses');
                 })
                 .catch(next);
+        };
+    }
+
+    editCourse() {
+        return (req, res, next) => {
+            Course.findById(req.params.id)
+                .then((course) => {
+                    res.render('courses/edit', { data: convertOne(course) });
+                })
+                .catch(next);
+        };
+    }
+
+    updateCourse() {
+        return (req, res, next) => {
+            Course.findOne({ _id: req.params.id })
+                .updateOne(req.body)
+                .then(res.redirect('/me/stored/courses'));
+        };
+    }
+
+    delete() {
+        return async (req, res, next) => {
+            try {
+                await Course.deleteOne({ _id: req.params.id });
+                res.redirect('back');
+            } catch (error) {
+                next();
+            }
         };
     }
 }

@@ -1,3 +1,4 @@
 node_modules/
 .vscode/
 src/resources/public/css/
+.husky/

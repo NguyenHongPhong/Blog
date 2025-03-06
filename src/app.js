@@ -5,6 +5,8 @@ import { engine } from 'express-handlebars';
 import { fileURLToPath } from 'url';
 import route from './routes/index.js';
 import db from './app/config/db/index.js';
+import methodOverride from 'method-override';
+
 const __filename = fileURLToPath(import.meta.url);
 
 const __dirname = path.dirname(__filename);
@@ -14,6 +16,8 @@ const app = express();
 const port = 3000;
 
 db.connect();
+
+app.use(methodOverride('_method'));
 
 app.use(express.urlencoded({ extended: true }));
 
