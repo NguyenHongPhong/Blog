@@ -20,6 +20,23 @@ class MeController {
                 .catch(next);
         };
     }
+
+    trashCourses() {
+        return (req, res, next) => {
+            Course.findWithDeleted({ deleted: true })
+                .then((courses) => {
+                    res.render('me/trash-courses', {
+                        courses: convert(courses),
+                        helpers: {
+                            sumIndex(a, b) {
+                                return a + b;
+                            },
+                        },
+                    });
+                })
+                .catch(next);
+        };
+    }
 }
 
 export default new MeController();

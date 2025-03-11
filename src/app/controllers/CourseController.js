@@ -63,10 +63,18 @@ class CourseController {
         };
     }
 
+    restore() {
+        return (req, res, next) => {
+            Course.findOneDeleted({ _id: req.params.id })
+                .updateOneDeleted({ deleted: false })
+                .then(res.render('back'));
+        };
+    }
+
     delete() {
         return async (req, res, next) => {
             try {
-                await Course.deleteOne({ _id: req.params.id });
+                await Course.delete({ _id: req.params.id });
                 res.redirect('back');
             } catch (error) {
                 next();

@@ -1,6 +1,6 @@
 <div class="mt-4">
     <h4>Các bài đăng của tôi</h4>
-    <a href="/me/trash/courses">Các khóa học đã xoá</a>
+    <a href="/me/stored/courses">Danh sách khóa học</a>
     <div class="mt-4">
         <table class="table">
             <thead class="thead-dark">
@@ -18,8 +18,8 @@
                     <td>{{name}}</td>
                     <td>{{description}}</td>
                     <td>{{createdAt}}</td>
-                    <td><a href="/courses/edit/{{_id}}" class="btn btn-outline-primary">Sửa</a>
-                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa</a>
+                    <td><a href="/courses/{{_id}}/restore?_method=PATCH" class="btn btn-outline-primary">Khôi phục</a>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa vĩnh viễn</a>
                     </td>
                     </tr>
                 {{/each}}

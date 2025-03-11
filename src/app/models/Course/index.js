@@ -1,5 +1,7 @@
 import mongoose from 'mongoose';
 import { nanoid } from 'nanoid';
+import mongooseDelete from 'mongoose-delete';
+
 const Schema = mongoose.Schema;
 
 const Course = new Schema(
@@ -18,13 +20,10 @@ const Course = new Schema(
     },
     {
         timestamps: true,
-        statics: {
-            async findSimiliarSlug(name) {
-                return;
-            },
-        },
     }
 );
+
+Course.plugin(mongooseDelete, { deletedAt: true, overrideMethods: 'all' });
 
 Course.pre('save', async function (next) {
     const existingCourse = await mongoose

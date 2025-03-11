@@ -9,6 +9,7 @@ router.get('/edit/:id', CourseController.editCourse());
 
 router.post('/store', CourseController.store());
 router.put('/update/:id', CourseController.updateCourse());
+router.patch('/:id/restore', CourseController.restore());
 router.delete('/:id', CourseController.delete());
 
 router.get('/', CourseController.home());
