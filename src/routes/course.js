@@ -11,6 +11,7 @@ router.post('/store', CourseController.store());
 router.put('/update/:id', CourseController.updateCourse());
 router.patch('/:id/restore', CourseController.restore());
 router.delete('/:id', CourseController.delete());
+router.delete('/:id/force', CourseController.deleteForce());
 
 router.get('/', CourseController.home());
 

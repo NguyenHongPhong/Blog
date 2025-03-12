@@ -6,9 +6,13 @@ const convertOne = convertObject.convertMongoose;
 class MeController {
     storeCourses() {
         return (req, res, next) => {
-            Course.find({})
-                .then((courses) => {
+            Promise.all([
+                Course.find({}),
+                Course.countDocumentsWithDeleted({ deleted: true }),
+            ])
+                .then(([courses, countDeleted]) => {
                     return res.render('me/courses', {
+                        countDeleted,
                         courses: convert(courses),
                         helpers: {
                             sumIndex(a, b) {

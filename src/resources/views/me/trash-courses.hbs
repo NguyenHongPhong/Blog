@@ -18,7 +18,7 @@
                     <td>{{name}}</td>
                     <td>{{description}}</td>
                     <td>{{createdAt}}</td>
-                    <td><a href="/courses/{{_id}}/restore?_method=PATCH" class="btn btn-outline-primary">Khôi phục</a>
+                    <td><a  data-id="{{_id}}" class="btn btn-outline-primary btn-restore">Khôi phục</a>
                         <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa vĩnh viễn</a>
                     </td>
                     </tr>
@@ -36,11 +36,11 @@
         <button tabindex="-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        Xác nhận xóa khóa học này?
+       Khóa học này sẽ bị xóa vĩnh viễn. Bạn có muốn tiếp tục thao tác này?
       </div>
       <div class="modal-footer">
         <button tabindex="-1" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-        <button id="btn-delete" tabindex="-1" type="button" class="btn btn-danger">Xóa</button>
+        <button id="btn-delete" tabindex="-1" type="button" class="btn btn-danger">Xóa vĩnh viễn</button>
       </div>
     </div>
   </div>
@@ -48,7 +48,9 @@
 
 <script>
     let idCourse;
+    const btnRestores = document.getElementsByClassName('btn-restore');
     const btnDelete = document.getElementById('btn-delete');
+
     document.addEventListener('DOMContentLoaded', function() {
         const confirmingModal = document.getElementById('confirming-modal');
         if (confirmingModal) {
@@ -57,6 +59,25 @@
         };
     });
 
+    Array.from(btnRestores).forEach(btn => btn.addEventListener('click', handleRestore));
+
+    async function handleRestore(e) {
+        e.preventDefault();
+        var id = e.target.getAttribute('data-id');
+        try {
+            await fetch(`/courses/${id}/restore`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+            return location.reload();
+        }
+        catch(err) {
+            console.log(err);
+        }
+    }
+
     function handleShowModal(e) {
         const button = e.relatedTarget;
         idCourse = button.getAttribute('data-id');
@@ -64,7 +85,7 @@
 
     btnDelete.addEventListener('click', async () => {
         try {
-            await fetch(`/courses/${idCourse}`, {
+            await fetch(`/courses/${idCourse}/force`, {
             method: "DELETE",
             headers: {
                 "Content-Type": "application/json"

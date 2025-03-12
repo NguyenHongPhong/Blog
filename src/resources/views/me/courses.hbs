@@ -1,79 +1,116 @@
-<div class="mt-4">
-    <h4>Các bài đăng của tôi</h4>
-    <a href="/me/trash/courses">Các khóa học đã xoá</a>
+<div class="container">
     <div class="mt-4">
-        <table class="table">
-            <thead class="thead-dark">
-                <tr>
-                <th scope="col">STT</th>
-                <th scope="col">Tên khóa học</th>
-                <th scope="col">Mô tả</th>
-                <th scope="col" colspan="2">Ngày tạo</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{#each courses}}
+    <h4>Các bài đăng của tôi</h4>
+    <a href="/me/trash/courses">Các khóa học đã xoá ({{countDeleted}})</a>
+    <div class="d-sm-flex mt-4 ">
+        <div class="form-check align-self-center">
+        <input class="form-check-input" type="checkbox" value="" id="checkboxAll">
+        <label class="form-check-label" for="checkboxAll">
+            Chọn tất cả
+        </label>
+        </div>
+
+        <select class="form-select action-select align-self-center w-25 select-custom" aria-label="Default select example">
+            <option value=""> --Chọn hành động--</option>
+            <option value="delete">Xóa</option>
+        </select>
+
+        <button type="button" class="btn btn-primary btn-sm">Thực hiện</button>
+    </div>
+
+        <div class="mt-4">
+            <table class="table">
+                <thead class="thead-dark">
                     <tr>
-                    <th scope="row">{{sumIndex @index 1}}</th>
-                    <td>{{name}}</td>
-                    <td>{{description}}</td>
-                    <td>{{createdAt}}</td>
-                    <td><a href="/courses/edit/{{_id}}" class="btn btn-outline-primary">Sửa</a>
-                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa</a>
-                    </td>
+                    <th scope="col"></th>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên khóa học</th>
+                    <th scope="col">Mô tả</th>
+                    <th scope="col" colspan="2">Ngày tạo</th>
                     </tr>
-                {{/each}}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                    {{#each courses}}
+                        <tr>
+                        <th scope="row">
+                            <div class="form-check align-self-center">
+                                <input class="form-check-input" name ="courseIds[]" type="checkbox" value="{{_id}}" id="checkbox-item">
+                            </div>
+                        </th>
+                        <th scope="row">{{sumIndex @index 1}}</th>
+                        <td>{{name}}</td>
+                        <td>{{description}}</td>
+                        <td>{{createdAt}}</td>
+                        <td><a href="/courses/edit/{{_id}}" class="btn btn-outline-primary">Sửa</a>
+                            <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa</a>
+                        </td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 
-<div class="modal fade" id="confirming-modal" tabindex="-1" aria-labelledby="confirmingModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="confirmingModalLabel">Xóa khóa học</h1>
-        <button tabindex="-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Xác nhận xóa khóa học này?
-      </div>
-      <div class="modal-footer">
-        <button tabindex="-1" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
-        <button id="btn-delete" tabindex="-1" type="button" class="btn btn-danger">Xóa</button>
-      </div>
+    <div class="modal fade" id="confirming-modal" tabindex="-1" aria-labelledby="confirmingModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h1 class="modal-title fs-5" id="confirmingModalLabel">Xóa khóa học</h1>
+            <button tabindex="-1" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+            Xác nhận xóa khóa học này?
+        </div>
+        <div class="modal-footer">
+            <button tabindex="-1" type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+            <button id="btn-delete" tabindex="-1" type="button" class="btn btn-danger">Xóa</button>
+        </div>
+        </div>
     </div>
-  </div>
-</div>
+    </div>
 
-<script>
-    let idCourse;
-    const btnDelete = document.getElementById('btn-delete');
-    document.addEventListener('DOMContentLoaded', function() {
-        const confirmingModal = document.getElementById('confirming-modal');
-        if (confirmingModal) {
-            confirmingModal.removeEventListener('show.bs.modal', handleShowModal); 
-            confirmingModal.addEventListener('show.bs.modal', handleShowModal);
+    <script>
+        let idCourse;
+        const btnDelete = document.getElementById('btn-delete');
+        const checkboxAll = document.getElementById('checkboxAll');
+        const checkboxItemCourses = document.querySelectorAll('input[name="courseIds[]"]');
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const confirmingModal = document.getElementById('confirming-modal');
+            if (confirmingModal) {
+                confirmingModal.removeEventListener('show.bs.modal', handleShowModal); 
+                confirmingModal.addEventListener('show.bs.modal', handleShowModal);
+            };
+        });
+
+        function handleShowModal(e) {
+            const button = e.relatedTarget;
+            idCourse = button.getAttribute('data-id');
         };
-    });
 
-    function handleShowModal(e) {
-        const button = e.relatedTarget;
-        idCourse = button.getAttribute('data-id');
-    };
-
-    btnDelete.addEventListener('click', async () => {
-        try {
-            await fetch(`/courses/${idCourse}`, {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json"
+        btnDelete.addEventListener('click', async () => {
+            try {
+                await fetch(`/courses/${idCourse}`, {
+                method: "DELETE",
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+                return location.reload();
+            } catch(err) {
+                console.log(err);
             }
         });
-            return location.reload();
-        } catch(err) {
-            console.log(err);
-        }
-    });
 
-</script>
+        checkboxAll.addEventListener('input', (e) => {
+            Array.from(checkboxItemCourses).forEach(checkboxItem => checkboxItem.checked = e.target.checked);
+        });
+
+        Array.from(checkboxItemCourses).forEach(checkboxItem => checkboxItem.addEventListener('input', ()=> {
+            var itemCoursesChecked = document.querySelectorAll('input[name="courseIds[]"]:checked').length;
+            var isCorrespond = itemCoursesChecked === checkboxItemCourses.length;
+            checkboxAll.checked = isCorrespond;
+        }));
+
+    </script>
+</div>
