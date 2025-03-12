@@ -8,6 +8,8 @@ router.get('/:slug', CourseController.course());
 router.get('/edit/:id', CourseController.editCourse());
 
 router.post('/store', CourseController.store());
+router.post('/action-submit', CourseController.actionSubmit());
+router.post('/restore-submit', CourseController.restoreSubmit());
 router.put('/update/:id', CourseController.updateCourse());
 router.patch('/:id/restore', CourseController.restore());
 router.delete('/:id', CourseController.delete());

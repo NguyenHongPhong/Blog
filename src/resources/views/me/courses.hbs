@@ -1,4 +1,4 @@
-<div class="container">
+<form class="container" method="POST" action="/courses/action-submit">
     <div class="mt-4">
     <h4>Các bài đăng của tôi</h4>
     <a href="/me/trash/courses">Các khóa học đã xoá ({{countDeleted}})</a>
@@ -10,45 +10,47 @@
         </label>
         </div>
 
-        <select class="form-select action-select align-self-center w-25 select-custom" aria-label="Default select example">
+        <select class="form-select action-select align-self-center w-25 select-custom" name="actionSubmit" aria-label="Default select example"
+            required
+        >
             <option value=""> --Chọn hành động--</option>
             <option value="delete">Xóa</option>
         </select>
 
-        <button type="button" class="btn btn-primary btn-sm">Thực hiện</button>
+        <button id="actionSubmit" type="submit" class="btn btn-primary btn-sm" disabled>Thực hiện</button>
     </div>
 
-        <div class="mt-4">
-            <table class="table">
-                <thead class="thead-dark">
+    <div class="mt-4">
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                <th scope="col"></th>
+                <th scope="col">STT</th>
+                <th scope="col">Tên khóa học</th>
+                <th scope="col">Mô tả</th>
+                <th scope="col" colspan="2">Ngày tạo</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each courses}}
                     <tr>
-                    <th scope="col"></th>
-                    <th scope="col">STT</th>
-                    <th scope="col">Tên khóa học</th>
-                    <th scope="col">Mô tả</th>
-                    <th scope="col" colspan="2">Ngày tạo</th>
+                    <th scope="row">
+                        <div class="form-check align-self-center">
+                            <input class="form-check-input" name ="courseIds[]" type="checkbox" value="{{_id}}" id="checkbox-item">
+                        </div>
+                    </th>
+                    <th scope="row">{{sumIndex @index 1}}</th>
+                    <td>{{name}}</td>
+                    <td>{{description}}</td>
+                    <td>{{createdAt}}</td>
+                    <td><a href="/courses/edit/{{_id}}" class="btn btn-outline-primary">Sửa</a>
+                        <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa</a>
+                    </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {{#each courses}}
-                        <tr>
-                        <th scope="row">
-                            <div class="form-check align-self-center">
-                                <input class="form-check-input" name ="courseIds[]" type="checkbox" value="{{_id}}" id="checkbox-item">
-                            </div>
-                        </th>
-                        <th scope="row">{{sumIndex @index 1}}</th>
-                        <td>{{name}}</td>
-                        <td>{{description}}</td>
-                        <td>{{createdAt}}</td>
-                        <td><a href="/courses/edit/{{_id}}" class="btn btn-outline-primary">Sửa</a>
-                            <a class="btn btn-outline-danger" data-bs-toggle="modal" data-id="{{_id}}" data-bs-target="#confirming-modal">Xóa</a>
-                        </td>
-                        </tr>
-                    {{/each}}
-                </tbody>
-            </table>
-        </div>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
     </div>
 
     <div class="modal fade" id="confirming-modal" tabindex="-1" aria-labelledby="confirmingModalLabel" aria-hidden="true">
@@ -74,6 +76,7 @@
         const btnDelete = document.getElementById('btn-delete');
         const checkboxAll = document.getElementById('checkboxAll');
         const checkboxItemCourses = document.querySelectorAll('input[name="courseIds[]"]');
+        const btnActionSubmit = document.querySelector('#actionSubmit');
 
         document.addEventListener('DOMContentLoaded', function() {
             const confirmingModal = document.getElementById('confirming-modal');
@@ -104,13 +107,15 @@
 
         checkboxAll.addEventListener('input', (e) => {
             Array.from(checkboxItemCourses).forEach(checkboxItem => checkboxItem.checked = e.target.checked);
+             btnActionSubmit.disabled = !e.target.checked;
         });
 
         Array.from(checkboxItemCourses).forEach(checkboxItem => checkboxItem.addEventListener('input', ()=> {
             var itemCoursesChecked = document.querySelectorAll('input[name="courseIds[]"]:checked').length;
             var isCorrespond = itemCoursesChecked === checkboxItemCourses.length;
             checkboxAll.checked = isCorrespond;
+            btnActionSubmit.disabled = !itemCoursesChecked;
         }));
 
     </script>
-</div>
+</form>

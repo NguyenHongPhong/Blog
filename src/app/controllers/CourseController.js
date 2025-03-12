@@ -36,7 +36,6 @@ class CourseController {
         return async (req, res, next) => {
             const formData = req.body;
             formData.image = `https://i.ytimg.com/vi/${formData.videoId}/maxresdefault.jpg`;
-            const newCourse = new Course({ ...formData });
             await Course.create(formData)
                 .then(() => {
                     res.redirect('/courses');
@@ -55,6 +54,21 @@ class CourseController {
         };
     }
 
+    actionSubmit() {
+        return (req, res, next) => {
+            switch (req.body.actionSubmit) {
+                case 'delete':
+                    Course.delete({ _id: { $in: req.body.courseIds } })
+                        .then(res.redirect('/me/stored/courses'))
+                        .catch(next);
+                    break;
+                default:
+                    break;
+            }
+            return res.json(req.body);
+        };
+    }
+
     updateCourse() {
         return (req, res, next) => {
             Course.findOne({ _id: req.params.id })
@@ -68,6 +82,20 @@ class CourseController {
             Course.restore({ _id: req.params.id })
                 .then(res.redirect('back'))
                 .catch(next);
+        };
+    }
+
+    restoreSubmit() {
+        return (req, res, next) => {
+            switch (req.body.actionSubmit) {
+                case 'restore':
+                    Course.restore({ _id: { $in: req.body.courseIds } })
+                        .then(res.redirect('back'))
+                        .catch(next);
+                    break;
+                default:
+                    break;
+            }
         };
     }
 
