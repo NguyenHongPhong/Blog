@@ -1,7 +1,6 @@
 import Course from '../models/Course/index.js';
 import convertObject from '../../utils/mongoose.js';
 const convert = convertObject.covertMongooses;
-const convertOne = convertObject.convertMongoose;
 
 class MeController {
     storeCourses() {
