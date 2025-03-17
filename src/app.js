@@ -29,12 +29,28 @@ app.engine(
     engine({
         extname: '.hbs',
         helpers: {
-            changeIconSort(sort) {
-                let rs =
-                    sort.column === 'name' && sort.type === 'desc'
-                        ? 'fa-solid fa-arrow-up-z-a'
-                        : 'fa-solid fa-arrow-up-a-z';
-                return `<i class="${rs}"></i>`;
+            changeIconSort(field, sort) {
+                let currentColumn = {
+                    type: field === sort.column ? sort.type : 'default',
+                };
+                const icons = {
+                    default: 'fa-solid fa-sort',
+                    desc: 'fa-solid fa-arrow-up-z-a',
+                    asc: 'fa-solid fa-arrow-up-a-z',
+                };
+
+                const types = {
+                    default: 'desc',
+                    desc: 'asc',
+                    asc: 'desc',
+                };
+
+                let icon = icons[currentColumn.type];
+                let type = types[currentColumn.type];
+
+                return `<a href="?sort&column=${field}&type=${type}">
+                            <i class="${icon}"></i>
+                        </a>`;
             },
         },
     })

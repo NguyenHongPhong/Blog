@@ -5,8 +5,16 @@ const convert = convertObject.covertMongooses;
 class MeController {
     storeCourses() {
         return (req, res, next) => {
+            var couseQuery = Course.find({});
+
+            if (res.locals.sort.type !== 'default') {
+                couseQuery.sort({
+                    [res.locals.sort.column]: res.locals.sort.type,
+                });
+            }
+
             Promise.all([
-                Course.find({}),
+                couseQuery,
                 Course.countDocumentsWithDeleted({ deleted: true }),
             ])
                 .then(([courses, countDeleted]) => {
